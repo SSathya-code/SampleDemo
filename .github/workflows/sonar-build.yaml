@@ -1,0 +1,42 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      sonarqube:
+        image: sonarqube:lts
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd='curl -f http://localhost:9000/ || exit 1'
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube on http://localhost:9000 ..."
+          for i in $(seq 1 60); do
+            if curl -sSf http://localhost:9000/api/system/health | grep -q '"status":"UP"'; then
+              echo "SonarQube ready"
+              break
+            fi
+            echo "Not ready yet ($i/60) - sleeping 5s"
+            sleep 5
+          done
+
+      - name: Run SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          # Example for Gradle; adapt to your build/scanner
+          ./gradlew clean build sonarqube \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=${SONAR_TOKEN}
