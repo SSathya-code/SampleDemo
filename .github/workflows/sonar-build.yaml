@@ -1,0 +1,30 @@
+#name: CI
+#
+#on: [push]
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-java@v4
+#        with:
+#          distribution: temurin
+#          java-version: '21'
+#
+#      - name: Run SonarQube analysis
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: |
+#          if [ -z "$SONAR_TOKEN" ]; then
+#          echo "SONAR_TOKEN is NOT available"
+#          exit 1
+#          else
+#          echo "SONAR_TOKEN is available"
+#          fi
+#          mvn clean verify sonar:sonar \
+#            -Dsonar.host.url=http://localhost:9000 \
+#            -Dsonar.projectKey=JavaUpskil
+#            -Dsonar.token="${SONAR_TOKEN}"
