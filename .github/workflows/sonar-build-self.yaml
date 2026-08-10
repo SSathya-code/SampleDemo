@@ -17,9 +17,42 @@ jobs:
           java-version: '21'
 
       - name: Setup Maven
-        uses: stCarpentier/setup-maven@v5
-        with:
-          maven-version: '3.9.11'
+        shell: powershell
+        run: |
+          $mavenVersion = "3.9.11"
+          $mavenUrl = "https://archive.apache.org/dist/maven/maven-3/$mavenVersion/binaries/apache-maven-$mavenVersion-bin.zip"
+          $mavenDir = "$env:RUNNER_TEMP\apache-maven-$mavenVersion"
+          $mavenZip = "$env:RUNNER_TEMP\apache-maven-$mavenVersion-bin.zip"
+          
+          Write-Host "Downloading Maven $mavenVersion..."
+          
+          Invoke-WebRequest `
+            -Uri $mavenUrl `
+            -OutFile $mavenZip
+          
+          Write-Host "Extracting Maven..."
+          
+          if (Test-Path $mavenDir) {
+            Remove-Item $mavenDir -Recurse -Force
+          }
+          
+          Expand-Archive `
+            -Path $mavenZip `
+            -DestinationPath $env:RUNNER_TEMP `
+            -Force
+          
+          $mavenHome = "$env:RUNNER_TEMP\apache-maven-$mavenVersion"
+          $mavenBin = "$mavenHome\bin"
+          
+          Write-Host "Maven Home: $mavenHome"
+          
+          # Add Maven to current job PATH
+          $env:PATH = "$mavenBin;$env:PATH"
+          
+          # Persist Maven PATH for subsequent GitHub Actions steps
+          Add-Content $env:GITHUB_PATH $mavenBin
+          
+          Write-Host "Maven added to PATH."
 
       - name: Check Java and Maven
         shell: powershell
@@ -44,11 +77,15 @@ jobs:
         shell: powershell
         run: |
           try {
-            $response = Invoke-WebRequest -Uri "http://localhost:9000" -UseBasicParsing
-            Write-Host "SonarQube is reachable. HTTP Status: $($response.StatusCode)"
+            $response = Invoke-WebRequest `
+              -Uri "http://localhost:9000" `
+              -UseBasicParsing
+          
+            Write-Host "SonarQube is reachable."
+            Write-Host "HTTP Status: $($response.StatusCode)"
           }
           catch {
-            Write-Host "SonarQube is NOT reachable"
+            Write-Host "SonarQube is NOT reachable."
             Write-Host $_.Exception.Message
             exit 1
           }
