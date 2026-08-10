@@ -58,12 +58,12 @@ jobs:
         run: |
           mvn clean verify
 
-    - name: Run SonarQube Analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: powershell
-      run: |
-        mvn sonar:sonar `
-          "-Dsonar.host.url=http://localhost:9000" `
-          "-Dsonar.projectKey=JavaUpskil" `
-          "-Dsonar.token=$env:SONAR_TOKEN" 
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          mvn sonar:sonar `
+            "-Dsonar.host.url=http://localhost:9000" `
+            "-Dsonar.projectKey=JavaUpskil" `
+            "-Dsonar.token=$env:SONAR_TOKEN" 
