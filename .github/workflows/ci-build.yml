@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-      - 'add/*'
+      - 'feature/*'
   pull_request:
 
 jobs:
