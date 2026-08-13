@@ -1,4 +1,4 @@
-///*
+/// *
 // * Copyright 2012-2014 the original author or authors.
 // *
 // * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +13,26 @@
 // * See the License for the specific language governing permissions and
 // * limitations under the License.
 // */
-//package hello;
+// package hello;
 //
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-//import org.springframework.boot.test.web.client.TestRestTemplate;
-//import org.springframework.boot.test.web.server.LocalServerPort;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.test.annotation.DirtiesContext;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+// import org.springframework.boot.test.web.client.TestRestTemplate;
+// import org.springframework.boot.test.web.server.LocalServerPort;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.test.annotation.DirtiesContext;
+// import org.springframework.test.context.junit.jupiter.SpringExtension;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
 //
-//@ExtendWith(SpringExtension.class)
-//@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-//@DirtiesContext
-//public class HelloWorldConfigurationTests {
+// @ExtendWith(SpringExtension.class)
+// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+// @DirtiesContext
+// public class HelloWorldConfigurationTests {
 //
 //	@LocalServerPort
 //	private int port;
@@ -47,4 +47,4 @@
 //		assertEquals(HttpStatus.OK, entity.getStatusCode());
 //	}
 //
-//}
+// }
