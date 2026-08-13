@@ -19,6 +19,7 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
     private static final String MDC_CORRELATION_ID = "correlationId";
     private static final Pattern CORRELATION_ID_PATTERN =
             Pattern.compile("^[a-zA-Z0-9._-]{1,100}$");
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -50,7 +51,6 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
             MDC.remove(MDC_CORRELATION_ID);
         }
     }
-
 
 
     private String getCorrelationId(HttpServletRequest request) {
