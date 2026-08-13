@@ -12,6 +12,8 @@ public class EmployeeController {
     @GetMapping("/employees")
     @Operation(summary = "Get all employees")
     public String getEmployees() {
+        String s = null;
+        System.out.println(s.length());
         return "Employee List";
     }
 }
