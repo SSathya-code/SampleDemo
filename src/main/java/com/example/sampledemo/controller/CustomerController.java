@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/customers")
 public class CustomerController {
 
+  @GetMapping("/{id}")
+  public String getCustomer(@PathVariable Long id) {
 
-    @GetMapping("/{id}")
-    public String getCustomer(@PathVariable Long id) {
+    log.info("Received request to get customer, id={}", id);
 
-        log.info("Received request to get customer, id={}", id);
+    log.warn("validating request to get customer, id={}", id);
 
-        log.warn("validating request to get customer, id={}", id);
-
-        return "Customer " + id;
-    }
+    return "Customer " + id;
+  }
 }

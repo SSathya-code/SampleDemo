@@ -4,68 +4,58 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.regex.Pattern;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 @Component
 public class CorrelationIdFilter extends OncePerRequestFilter {
 
-    private static final String CORRELATION_ID_HEADER = "X-Correlation-ID";
-    private static final String MDC_CORRELATION_ID = "correlationId";
-    private static final Pattern CORRELATION_ID_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9._-]{1,100}$");
+  private static final String CORRELATION_ID_HEADER = "X-Correlation-ID";
+  private static final String MDC_CORRELATION_ID = "correlationId";
+  private static final Pattern CORRELATION_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9._-]{1,100}$");
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-//        String correlationId =
-//                request.getHeader(CORRELATION_ID_HEADER);
+    //        String correlationId =
+    //                request.getHeader(CORRELATION_ID_HEADER);
 
-        String correlationId =
-                this.getCorrelationId(request);
+    String correlationId = this.getCorrelationId(request);
 
-        if (correlationId == null || correlationId.isBlank()) {
-            correlationId = UUID.randomUUID().toString();
-        }
-
-        try {
-            MDC.put(MDC_CORRELATION_ID, correlationId);
-
-            response.setHeader(
-                    CORRELATION_ID_HEADER,
-                    correlationId
-            );
-
-            filterChain.doFilter(request, response);
-
-        } finally {
-            MDC.remove(MDC_CORRELATION_ID);
-        }
+    if (correlationId == null || correlationId.isBlank()) {
+      correlationId = UUID.randomUUID().toString();
     }
 
+    try {
+      MDC.put(MDC_CORRELATION_ID, correlationId);
 
-    private String getCorrelationId(HttpServletRequest request) {
+      response.setHeader(CORRELATION_ID_HEADER, correlationId);
 
-        String correlationId =
-                request.getHeader("X-Correlation-ID");
+      filterChain.doFilter(request, response);
 
-        if (correlationId == null || correlationId.isBlank()) {
-            return UUID.randomUUID().toString();
-        }
-
-        if (!CORRELATION_ID_PATTERN.matcher(correlationId).matches()) {
-            return UUID.randomUUID().toString();
-        }
-
-        return correlationId;
+    } finally {
+      MDC.remove(MDC_CORRELATION_ID);
     }
+  }
+
+  private String getCorrelationId(HttpServletRequest request) {
+
+    String correlationId = request.getHeader("X-Correlation-ID");
+
+    if (correlationId == null || correlationId.isBlank()) {
+      return UUID.randomUUID().toString();
+    }
+
+    if (!CORRELATION_ID_PATTERN.matcher(correlationId).matches()) {
+      return UUID.randomUUID().toString();
+    }
+
+    return correlationId;
+  }
 }
